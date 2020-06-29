@@ -64,16 +64,17 @@ local function update_view(direction)
   position = position + direction
   if position < 0 then position = 0 end
 
-  local result = api.nvim_call_function('systemlist', {
-      'git diff-tree --no-commit-id --name-only -r HEAD~'..position
-    })
+  -- local result = api.nvim_call_function('systemlist', {
+  --     'git diff-tree --no-commit-id --name-only -r HEAD~'..position
+  --   })
 
-  if #result == 0 then table.insert(result, '') end
-  for k,v in pairs(result) do
-    result[k] = '  '..result[k]
-  end
+  -- if #result == 0 then table.insert(result, '') end
+  -- for k,v in pairs(result) do
+  --   result[k] = '  '..result[k]
+  -- end
+  local result = api.nvim_call_function('execute', {'edit ~/vimwiki/index.md'})
 
-  api.nvim_buf_set_lines(buf, 1, 2, false, {center('HEAD~'..position)})
+  -- api.nvim_buf_set_lines(buf, 1, 2, false, {center('HEAD~'..position)})
   api.nvim_buf_set_lines(buf, 3, -1, false, result)
 
   api.nvim_buf_add_highlight(buf, -1, 'whidSubHeader', 1, 0, -1)
