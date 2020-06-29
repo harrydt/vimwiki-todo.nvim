@@ -9,14 +9,14 @@ local function center(str)
 end
 
 local function open_window()
-  buf = vim.api.nvim_create_buf(false, true)
-  local border_buf = vim.api.nvim_create_buf(false, true)
+  buf = api.nvim_create_buf(false, true)
+  local border_buf = api.nvim_create_buf(false, true)
 
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'whid')
+  api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  api.nvim_buf_set_option(buf, 'filetype', 'whid')
 
-  local width = vim.api.nvim_get_option("columns")
-  local height = vim.api.nvim_get_option("lines")
+  local width = api.nvim_get_option("columns")
+  local height = api.nvim_get_option("lines")
 
   local win_height = math.ceil(height * 0.8 - 4)
   local win_width = math.ceil(width * 0.8)
@@ -47,24 +47,24 @@ local function open_window()
     table.insert(border_lines, middle_line)
   end
   table.insert(border_lines, '╚' .. string.rep('═', win_width) .. '╝')
-  vim.api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
+  api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
 
-  local border_win = vim.api.nvim_open_win(border_buf, true, border_opts)
+  local border_win = api.nvim_open_win(border_buf, true, border_opts)
   win = api.nvim_open_win(buf, true, opts)
   api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border_buf)
 
-  vim.api.nvim_win_set_option(win, 'cursorline', true)
+  api.nvim_win_set_option(win, 'cursorline', true)
 
   api.nvim_buf_set_lines(buf, 0, -1, false, { center('What have i done?'), '', ''})
   api.nvim_buf_add_highlight(buf, -1, 'WhidHeader', 0, 0, -1)
 end
 
 local function update_view(direction)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+  api.nvim_buf_set_option(buf, 'modifiable', true)
   position = position + direction
   if position < 0 then position = 0 end
 
-  local result = vim.api.nvim_call_function('systemlist', {
+  local result = api.nvim_call_function('systemlist', {
       'git diff-tree --no-commit-id --name-only -r HEAD~'..position
     })
 
@@ -77,7 +77,7 @@ local function update_view(direction)
   api.nvim_buf_set_lines(buf, 3, -1, false, result)
 
   api.nvim_buf_add_highlight(buf, -1, 'whidSubHeader', 1, 0, -1)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
 local function close_window()
